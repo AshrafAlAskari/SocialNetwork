@@ -8,11 +8,11 @@ class Event extends Model
 {
    public function user()
    {
-      return $this->belongsTo('social_network\User');
+      return $this->belongsTo(User::Class);
    }
 
    public function goings()
    {
-      return $this->hasMany('social_network\Going');
+      return $this->hasMany(Going::Class);
    }
 }

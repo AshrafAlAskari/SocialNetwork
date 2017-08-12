@@ -8,16 +8,16 @@ class Post extends Model
 {
     public function user()
     {
-        return $this->belongsTo('social_network\User');
+        return $this->belongsTo(User::Class);
     }
 
     public function likes()
     {
-        return $this->hasMany('social_network\Like');
+        return $this->hasMany(Like::Class);
     }
 
     public function comments()
     {
-        return $this->hasMany('social_network\Comment');
+        return $this->hasMany(Comment::Class);
     }
 }

@@ -8,6 +8,6 @@ class Book extends Model
 {
    public function user()
    {
-      return $this->belongsTo('social_network\User');
+      return $this->belongsTo(User::Class);
    }
 }

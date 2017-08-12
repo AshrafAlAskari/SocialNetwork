@@ -1,4 +1,5 @@
 @extends('layouts.master')
+
 @section('content')
    <div id="wrapper" class="toggled">
       <div id="sidebar-wrapper">
@@ -10,11 +11,6 @@
             @endif
             <br />
             <h1> {{ $user_name = DB::table('users')->where('id', $user_id)->first()->first_name }} </h1>
-            <p>
-               <strong>College: </strong>{{ $college = DB::table('users')->where('id', $user_id)->first()->college }}
-               <br />
-               <strong>Department: </strong>{{ $department = DB::table('users')->where('id', $user_id)->first()->department }}
-            </p>
          </div>
       </div>
 
@@ -128,7 +124,6 @@
       </div><!-- /.modal -->
 
       <script>
-      var token = '{{ Session::token() }}';
       var urlEdit = '{{ route('edit') }}';
       var urlLike = '{{ route('like') }}';
       </script>

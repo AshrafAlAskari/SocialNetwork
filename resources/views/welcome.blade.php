@@ -10,6 +10,7 @@
       <div class="col-md-6">
          <h3>Sign Up</h3>
          <form action="{{ route('signup') }}" method="post">
+            {{csrf_field()}}
             <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                <label for="email">E-Mail</label>
                <input class="form-control" type="text" name="email" id="email" value="{{ Request::old('email') }}">
@@ -22,31 +23,15 @@
                <label for="password">Password</label>
                <input class="form-control" type="password" name="password" id="password" value="{{ Request::old('password') }}">
             </div>
-
-            <div class="form-group {{ $errors->has('college') ? 'has-error' : '' }}">
-               <label for="college">College</label>
-               <input class="form-control" type="text" name="college" id="college" value="{{ Request::old('college') }}">
-            </div>
-
-            <div class="form-group {{ $errors->has('department') ? 'has-error' : '' }}">
-               <label for="department">Department</label>
-               <input class="form-control" type="text" name="department" id="department" value="{{ Request::old('department') }}">
-            </div>
-
-            <label for="birthday">Birthday</label>
-            <div id="datepicker" class="input-group date {{ $errors->has('date') ? 'has-error' : '' }}">
-               <input type="text" class="form-control" name="birthday"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-            </div>
-
             <br />
 
             <button type="submit" class="btn btn-primary">Submit</button>
-            <input type="hidden" name="_token" value="{{ Session::token() }}">
          </form>
       </div>
       <div class="col-md-6">
          <h3>Sign In</h3>
          <form action="{{ route('signin') }}" method="post">
+            {{csrf_field()}}
             <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                <label for="email">Your E-Mail</label>
                <input class="form-control" type="text" name="email" id="email" value="{{ Request::old('email') }}">
@@ -56,7 +41,6 @@
                <input class="form-control" type="password" name="password" id="password" value="{{ Request::old('password') }}">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
-            <input type="hidden" name="_token" value="{{ Session::token() }}">
          </form>
       </div>
    </div>

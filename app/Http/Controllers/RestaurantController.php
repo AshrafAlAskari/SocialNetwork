@@ -4,30 +4,30 @@ namespace social_network\Http\Controllers;
 use social_network\Restaurant;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Session;
-
-use Illuminate\Support\Facades\Log;
+use Validator;
 
 class RestaurantController extends Controller
 {
    public function getRestaurants()
    {
       $restaurants = Restaurant::orderBy('created_at', 'desc')->get();
-      return view('restaurants', ['restaurants' => $restaurants]);
+      return view('restaurants', compact('restaurants'));
    }
 
    public function postCreateRestaurant(Request $request)
    {
-      $this->validate($request, [
+      $validator = Validator::make($request->all(),[
          'title' => 'required|max:100',
          'address' => 'required|max:150',
          'mobile' => 'required|max:50'
       ]);
+      if($validator->fails())
+      return back()->WithErrors($validator->errors()->all())->withInput();
+
       $restaurant = new Restaurant();
-      $restaurant->title = $request['title'];
-      $restaurant->address = $request['address'];
-      $restaurant->mobile = $request['mobile'];
+      $restaurant->title = $request->title;
+      $restaurant->address = $request->address;
+      $restaurant->mobile = $request->mobile;
       $message = 'There was an error';
       if ($restaurant->save()) {
          $message = 'Restaurant added created!';
@@ -37,7 +37,7 @@ class RestaurantController extends Controller
 
    public function getDeleteRestaurant($restaurant_id)
    {
-      $restaurant = Restaurant::where('id', $restaurant_id)->first();
+      $restaurant = Restaurant::find($restaurant_id)->first();
       if (Auth::user() != 1) {
          return redirect()->back();
       }

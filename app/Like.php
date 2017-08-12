@@ -8,11 +8,11 @@ class Like extends Model
 {
     public function user()
     {
-        return $this->belongsTo('social_network\User');
+        return $this->belongsTo(User::Class);
     }
 
     public function post()
     {
-        return $this->belongsTo('social_network\Post');
+        return $this->belongsTo(Post::Class);
     }
 }

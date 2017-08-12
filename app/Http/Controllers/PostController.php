@@ -8,9 +8,10 @@ use social_network\Comment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Validator;
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
@@ -31,7 +32,7 @@ class PostController extends Controller
             }
          }
       }
-   return view('dashboard', ['posts' => $posts], ['comments' => $comments])->with('filteredbdays', $filteredbdays);
+   return view('dashboard', compact('posts', 'comments'))->with('filteredbdays', $filteredbdays);
 }
 
 public function getPostImage($filename)
@@ -44,16 +45,19 @@ public function getUserPage($user_id)
 {
    $posts = Post::orderBy('created_at', 'desc')->where('user_id', $user_id)->get();
    $comments = Comment::orderby('created_at', 'asc')->get();
-   return view('userpage', ['posts' => $posts], ['comments' => $comments])->with(['user_id' => $user_id]);
+   return view('userpage', compact('posts', 'comments'))->with(['user_id' => $user_id]);
 }
 
 public function postCreatePost(Request $request)
 {
-   $this->validate($request, [
+   $validator = Validator::make($request->all(),[
       'body' => 'required|max:1000'
    ]);
+   if($validator->fails())
+   return back()->WithErrors($validator->errors()->all())->withInput();
+
    $post = new Post();
-   $post->body = $request['body'];
+   $post->body = $request->body;
    $message = 'There was an error';
    $file = $request->file('image');
    $random = str_random(16);
@@ -70,7 +74,7 @@ public function postCreatePost(Request $request)
 
 public function getDeletePost($post_id)
 {
-   $post = Post::where('id', $post_id)->first();
+   $post = Post::find($post_id)->first();
    if (Auth::user() != $post->user) {
       return redirect()->back();
    }
@@ -80,22 +84,25 @@ public function getDeletePost($post_id)
 
 public function postEditPost(Request $request)
 {
-   $this->validate($request, [
-      'body' => 'required'
+   $validator = Validator::make($request->all(),[
+      'body' => 'required|max:1000'
    ]);
-   $post = Post::find($request['postId']);
+   if($validator->fails())
+   return back()->WithErrors($validator->errors()->all())->withInput();
+
+   $post = Post::find($request->postId);
    if (Auth::user() != $post->user) {
       return redirect()->back();
    }
-   $post->body = $request['body'];
+   $post->body = $request->body;
    $post->update();
    return response()->json(['new_body' => $post->body], 200);
 }
 
 public function postLikePost(Request $request)
 {
-   $post_id = $request['postId'];
-   $is_like = $request['isLike'];
+   $post_id = $request->postId;
+   $is_like = $request->isLike;
    if ($is_like == "Like") {
       $is_like = 0;
    } else {
@@ -127,12 +134,15 @@ public function postLikePost(Request $request)
 
 public function postCreateComment(Request $request)
 {
-   $this->validate($request, [
+   $validator = Validator::make($request->all(),[
       'comment' => 'required|max:1000'
    ]);
+   if($validator->fails())
+   return back()->WithErrors($validator->errors()->all())->withInput();
+
    $comment = new Comment();
-   $comment->comment = $request['comment'];
-   $comment->post_id = $request['c_post_id'];
+   $comment->comment = $request->comment;
+   $comment->post_id = $request->c_post_id;
    $message = 'There was an error';
    if ($request->user()->comments()->save($comment)) {
       $message = 'Commented  successfully!';

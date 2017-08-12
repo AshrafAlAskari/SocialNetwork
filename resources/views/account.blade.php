@@ -9,6 +9,7 @@
       <div class="col-md-6 col-md-offset-1">
          <header><h3>Your Account</h3></header>
          <form action="{{ route('account.save') }}" method="post" enctype="multipart/form-data">
+            {{csrf_field()}}
             <div class="form-group">
                <label for="first_name">First Name</label>
                <input type="text" name="first_name" class="form-control" value="{{ $user->first_name }}" id="first_name">
@@ -18,7 +19,6 @@
                <input type="file" name="image" class="form-control" id="image">
             </div>
             <button type="submit" class="btn btn-primary">Save Account</button>
-            <input type="hidden" value="{{ Session::token() }}" name="_token">
          </form>
       </div>
    </section>

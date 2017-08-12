@@ -6,7 +6,7 @@ use social_network\User;
 use social_network\Going;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use Validator;
 
 class EventController extends Controller
 {
@@ -27,19 +27,21 @@ class EventController extends Controller
          }
       }
 
-      return view('event', ['events' => $events])->with('filteredbdays', $filteredbdays);
+      return view('event', compact('events'))->with('filteredbdays', $filteredbdays);
    }
 
    public function postCreateEvent(Request $request)
    {
-      $this->validate($request, [
+      $validator = Validator::make($request->all(),[
          'body' => 'required|max:1000',
          'date' => 'required|date_format:Y-m-d'
       ]);
+      if($validator->fails())
+      return back()->WithErrors($validator->errors()->all())->withInput();
 
       $event = new Event();
-      $event->body = $request['body'];
-      $event->date = $request['date'];
+      $event->body = $request->body;
+      $event->date = $request->date;
       $message = 'There was an error';
       if ($request->user()->posts()->save($event)) {
          $message = 'Event successfully created!';
@@ -49,7 +51,7 @@ class EventController extends Controller
 
    public function getDeleteEvent($event_id)
    {
-      $event = Event::where('id', $event_id)->first();
+      $event = Event::find($event_id)->first();
       if (Auth::user() != $event->user) {
          return redirect()->back();
       }
@@ -59,8 +61,8 @@ class EventController extends Controller
 
    public function postGoingEvent(Request $request)
    {
-      $event_id = $request['eventId'];
-      $is_going = $request['isGoing'];
+      $event_id = $request->eventId;
+      $is_going = $request->isGoing;
 
       if ($is_going == "Will go") {
          $is_going = 0;

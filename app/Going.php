@@ -8,11 +8,11 @@ class Going extends Model
 {
    public function user()
    {
-      return $this->belongsTo('social_network\User');
+      return $this->belongsTo(User::Class);
    }
 
    public function event()
    {
-      return $this->belongsTo('social_network\Event');
+      return $this->belongsTo(Event::Class);
    }
 }

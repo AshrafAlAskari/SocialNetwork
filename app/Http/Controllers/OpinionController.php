@@ -1,14 +1,10 @@
 <?php
 namespace social_network\Http\Controllers;
 
-use social_network\User;
 use social_network\Opinion;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Session;
-
-use Illuminate\Support\Facades\Log;
+use Validator;
 
 class OpinionController extends Controller
 {
@@ -16,7 +12,7 @@ class OpinionController extends Controller
    {
       if(Auth::user()->id == 1) {
          $opinions = Opinion::orderBy('created_at', 'desc')->get();
-         return view('opinions', ['opinions' => $opinions]);
+         return view('opinions', compact('opinions'));
       }
       else{
          return redirect()->route('dashboard');
@@ -25,12 +21,11 @@ class OpinionController extends Controller
 
    public function postCreateOpinion(Request $request)
    {
-      $this->validate($request, [
-         'body' => 'required'
+      $validator = Validator::make($request->all(),[
+         'body' => 'required|max:1000'
       ]);
-
       $opinion = new Opinion();
-      $opinion->body = $request['body'];
+      $opinion->body = $request->body;
       $opinion->save();
    }
 }
