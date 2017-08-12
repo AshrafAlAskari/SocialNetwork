@@ -13,14 +13,14 @@
             {{csrf_field()}}
             <div class="form-group">
                <label for="title">Title</label>
-               <input type="text" name="title" class="form-control" id="title">
+               <input type="text" name="title" class="form-control" id="title" value="{{old('title')}}">
             </div>
             <div class="form-group">
                <textarea class="form-control" name="body" id="new-book" rows="3" placeholder="Offer details"></textarea>
             </div>
             <div class="form-group">
                <label for="title">Price</label>
-               <input type="text" name="price" class="form-control" id="price">
+               <input type="text" name="price" class="form-control" id="price" value="{{old('price')}}">
             </div>
             <div class="form-group">
                <label for="image">Image (only .jpg)</label>

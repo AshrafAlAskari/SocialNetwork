@@ -10,6 +10,7 @@
       <div class="col-md-8 col-md-offset-1">
          <header><h3>What do you have to say?</h3></header>
          <form action="{{ route('post.create') }}" method="post" enctype="multipart/form-data">
+            {{csrf_field()}}
             <div class="form-group">
                <textarea class="form-control" name="body" id="new-post" rows="3" placeholder="Your Post"></textarea>
             </div>
@@ -18,7 +19,6 @@
                <input type="file" name="image" class="form-control" id="image">
             </div>
             <button type="submit" class="btn btn-primary">Create Post</button>
-            <input type="hidden" value="{{ Session::token() }}" name="_token">
          </form>
       </div>
    </section>

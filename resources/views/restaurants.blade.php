@@ -21,7 +21,7 @@
                </div>
                <div class="form-group">
                   <label for="title">Mobile</label>
-                  <input type="text" name="mobile" class="form-control" id="mobile">
+                  <input type="text" name="mobile" class="form-control" id="mobile" value="{{old('mobile')}}">
                </div>
                <button type="submit" class="btn btn-primary">Add</button>
             </form>
