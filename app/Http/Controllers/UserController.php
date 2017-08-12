@@ -27,17 +27,11 @@ class UserController extends Controller
       $email = $request->email;
       $first_name = $request->first_name;
       $password = bcrypt($request->password);
-      $college = $request->college;
-      $department = $request->department;
-      $bday = $request->birthday;
 
       $user = new User();
       $user->email = $email;
       $user->first_name = $first_name;
       $user->password = $password;
-      $user->college = $college;
-      $user->department = $department;
-      $user->bday = $bday;
       $user->save();
 
       Auth::login($user);
