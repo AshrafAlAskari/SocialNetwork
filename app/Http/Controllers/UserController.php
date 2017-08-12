@@ -17,9 +17,6 @@ class UserController extends Controller
          'email' => 'required|email|max:30|unique:users',
          'first_name' => 'required|max:120',
          'password' => 'required|min:4',
-         'college' => 'required|max:120',
-         'department' => 'required|max:120',
-         'birthday' => 'required|date_format:Y-m-d'
       ]);
       if($validator->fails())
       return back()->WithErrors($validator->errors()->all())->withInput();
@@ -32,10 +29,12 @@ class UserController extends Controller
       $user->email = $email;
       $user->first_name = $first_name;
       $user->password = $password;
-      $user->save();
-
-      Auth::login($user);
-      return redirect()->route('dashboard');
+      if($user->save()) {
+         Auth::login($user);
+         return redirect()->route('dashboard');
+      }
+      $alert = "Sign up failed";
+      redirect()->back()->with(['alert' => $alert]);
    }
 
    public function postSignIn(Request $request)
@@ -47,11 +46,10 @@ class UserController extends Controller
       if($validator->fails())
       return back()->WithErrors($validator->errors()->all())->withInput();
 
-      if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-         return redirect()->route('dashboard');
-      } else {
-         $alert = "Email or password or both are not correct";
-      }
+      if (Auth::attempt(['email' => $request->email, 'password' => $request->password]))
+      return redirect()->route('dashboard');
+
+      $alert = "Email or password or both are not correct";
       return redirect()->back()->with(['alert' => $alert]);
    }
 
