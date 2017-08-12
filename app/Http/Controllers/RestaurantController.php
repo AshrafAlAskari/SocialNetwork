@@ -38,7 +38,7 @@ class RestaurantController extends Controller
    public function getDeleteRestaurant($restaurant_id)
    {
       $restaurant = Restaurant::find($restaurant_id)->first();
-      if (Auth::user() != 1) {
+      if (Auth::user()->id != 1) {
          return redirect()->back();
       }
       $restaurant->delete();
